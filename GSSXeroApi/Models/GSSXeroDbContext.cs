@@ -17,6 +17,7 @@ namespace GSSXeroApi.Models
         internal DbSet<Client> Clients { get; set; }
         internal DbSet<Employee> Employees { get; set; }
         internal DbSet<Timesheet> Timesheets { get; set; }
+        internal DbSet<TimesheetRow> TimesheetRows { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

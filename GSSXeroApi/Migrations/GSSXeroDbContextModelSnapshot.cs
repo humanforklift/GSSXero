@@ -21,7 +21,7 @@ namespace GSSXeroApi.Migrations
 
             modelBuilder.Entity("GSSXeroApi.Models.Entities.Client", b =>
                 {
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -56,7 +56,27 @@ namespace GSSXeroApi.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("ClientId")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TimesheetId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Timesheets");
+                });
+
+            modelBuilder.Entity("GSSXeroApi.Models.Entities.TimesheetRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("ClientId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
@@ -65,38 +85,39 @@ namespace GSSXeroApi.Migrations
                     b.Property<double>("Duration")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("StartTime")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<int>("TimesheetId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("TimesheetId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("TimesheetId");
 
-                    b.ToTable("Timesheets");
+                    b.ToTable("TimesheetRows");
                 });
 
             modelBuilder.Entity("GSSXeroApi.Models.Entities.Timesheet", b =>
                 {
-                    b.HasOne("GSSXeroApi.Models.Entities.Client", null)
-                        .WithMany("Timesheets")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GSSXeroApi.Models.Entities.Employee", null)
                         .WithMany("Timesheets")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GSSXeroApi.Models.Entities.TimesheetRow", b =>
+                {
+                    b.HasOne("GSSXeroApi.Models.Entities.Client", null)
+                        .WithMany("TimesheetRows")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("GSSXeroApi.Models.Entities.Timesheet", null)
+                        .WithMany("TimesheetRows")
+                        .HasForeignKey("TimesheetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

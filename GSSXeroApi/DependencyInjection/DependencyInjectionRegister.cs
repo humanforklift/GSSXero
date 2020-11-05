@@ -13,6 +13,7 @@ namespace GSSXeroApi.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<ITimesheetService, TimesheetService>();
+            services.AddScoped<IClientService, ClientService>();
 
             return services;
         }

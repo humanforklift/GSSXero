@@ -39,15 +39,7 @@ namespace GSSXeroApi
 
             services.RegisterServices();
 
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Title = "GSS Xero APIs",
-                    Version = "v2",
-                    Description = "Documentation for the GSS API endpoints"
-                });
-            });
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,14 +58,19 @@ namespace GSSXeroApi
 
             app.UseAuthorization();
 
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger();
+            app.UseOpenApi();
 
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v2/swagger.json", "GSS Xero API"));
+            app.UseSwaggerUi3();
         }
     }
 }

@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201012204145_AddTimesheetRowTable.cs" />
+    <Compile Remove="Migrations\20201012204145_AddTimesheetRowTable.Designer.cs" />
+    <Compile Remove="Migrations\20201016035819_SetIdentityColumns.cs" />
+    <Compile Remove="Migrations\20201016035819_SetIdentityColumns.Designer.cs" />
+    <Compile Remove="Migrations\20201016040027_SetIdentityColumns.cs" />
+    <Compile Remove="Migrations\20201016040027_SetIdentityColumns.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
@@ -12,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.7.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
   </ItemGroup>
 

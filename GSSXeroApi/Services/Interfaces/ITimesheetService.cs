@@ -1,4 +1,5 @@
-﻿using GSSXeroApi.Models.Entities;
+﻿using GSSXeroApi.Models.DTOs.Requests.Timesheet;
+using GSSXeroApi.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace GSSXeroApi.Services.Interfaces
     public interface ITimesheetService
     {
         List<Timesheet> GetTimesheets();
+        Task SaveTimesheetAsync(TimesheetRequest timesheet);
     }
 }

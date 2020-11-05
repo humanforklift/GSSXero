@@ -11,6 +11,6 @@ namespace GSSXeroApi.Models.Entities
         public string Name { get; set; }
 
         // EF relationship definition
-        public ICollection<Timesheet> Timesheets { get; set; }
+        public ICollection<TimesheetRow> TimesheetRows { get; set; }
     }
 }

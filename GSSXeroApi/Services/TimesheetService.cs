@@ -1,4 +1,6 @@
-﻿using GSSXeroApi.Models;
+﻿using GSSXeroApi.Mappers;
+using GSSXeroApi.Models;
+using GSSXeroApi.Models.DTOs.Requests.Timesheet;
 using GSSXeroApi.Models.Entities;
 using GSSXeroApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -20,20 +22,19 @@ namespace GSSXeroApi.Services
 
         public List<Timesheet> GetTimesheets()
         {
-            var list = new List<Timesheet>()
-            {
-                new Timesheet
-                {
-                    TimesheetId = 1,
-                    ClientId = 3,
-                    Date = DateTime.Now,
-                    Duration = 5,
-                    EmployeeId = 7,
-                    Notes = "Worked on ESI stuff"
-                }
-            };
+            var list = new List<Timesheet>();
             
             return list;
+        }
+
+        public async Task SaveTimesheetAsync(TimesheetRequest timesheet)
+        {
+            var entity = timesheet.ToEntity(_context);
+
+            _context.Timesheets.Add(entity);
+            _context.TimesheetRows.AddRange(entity.TimesheetRows);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

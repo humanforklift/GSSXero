@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GSSXeroApi.Models.DTOs.Requests.Timesheet;
 using GSSXeroApi.Models.Entities;
 using GSSXeroApi.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +26,22 @@ namespace GSSXeroApi.Controllers
         public ActionResult<IEnumerable<Timesheet>> GetTimesheets()
         {
             return _timesheetService.GetTimesheets();
+        }
+
+        // POST: api/Timesheet
+        [HttpPost]
+        public async Task<IActionResult> SaveTimesheetAsync([FromBody] TimesheetRequest timesheet)
+        {
+            try
+            {
+                await _timesheetService.SaveTimesheetAsync(timesheet);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
