@@ -36,5 +36,13 @@ namespace GSSXeroApi.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<TimesheetRequest>> GetOpenTimesheets(int employeeId)
+        {
+            return await _context.Timesheets
+                .Where(t => t.Status == TimesheetStatus.Open && t.EmployeeId == employeeId)
+                .Select(t => t.ToDto())
+                .ToListAsync();
+        }
     }
 }

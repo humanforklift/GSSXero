@@ -14,6 +14,7 @@ namespace GSSXeroApi.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TimesheetId { get; set; }
         public DateTime Date { get; set; }
+        public TimesheetStatus Status { get; set; }
         public List<TimesheetRow> TimesheetRows { get; set; }
 
         // EF relationship definition
@@ -22,5 +23,12 @@ namespace GSSXeroApi.Models.Entities
         public Timesheet()
         {
         }
+    }
+
+    public enum TimesheetStatus
+    {
+        Open,
+        Submitted,
+        Archived
     }
 }

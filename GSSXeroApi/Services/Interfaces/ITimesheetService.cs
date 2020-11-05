@@ -11,5 +11,6 @@ namespace GSSXeroApi.Services.Interfaces
     {
         List<Timesheet> GetTimesheets();
         Task SaveTimesheetAsync(TimesheetRequest timesheet);
+        Task<List<TimesheetRequest>> GetOpenTimesheets(int employeeId);
     }
 }

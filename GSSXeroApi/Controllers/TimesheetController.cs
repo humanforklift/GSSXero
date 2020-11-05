@@ -23,9 +23,9 @@ namespace GSSXeroApi.Controllers
 
         // GET: api/Timesheet
         [HttpGet]
-        public ActionResult<IEnumerable<Timesheet>> GetTimesheets()
+        public async Task<IEnumerable<TimesheetRequest>> GetTimesheets(int employeeId)
         {
-            return _timesheetService.GetTimesheets();
+            return await _timesheetService.GetOpenTimesheets(employeeId);
         }
 
         // POST: api/Timesheet

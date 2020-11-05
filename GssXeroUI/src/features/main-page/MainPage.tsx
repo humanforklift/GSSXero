@@ -9,8 +9,6 @@ import { GlobalStoreContext } from "../shared/stores/GlobalStore";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { MessageDialog } from "shared-components/material-ui-modals";
 import { AppBarContainer } from "shared-components/material-ui-app-bar-container";
-import Landing from "features/landing-page/Landing";
-import NewTimesheet from "features/timesheet/NewTimesheet";
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -26,7 +24,7 @@ const MainPage = () => {
   const title = useMemo(
     () =>
       (process.env.REACT_APP_ENVIRONMENT_ID !== "prod"
-        ? "(" + process.env.REACT_APP_ENVIRONMENT_NAME + ")"
+        ? `GSS Xero App (${process.env.REACT_APP_ENVIRONMENT_NAME})`
         : null),
     []
   );

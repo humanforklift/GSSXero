@@ -8,6 +8,8 @@ import { SafetyReport } from "features/reports/SafetyReport";
 import UsageReport from "features/reports/UsageReport";
 import NewTimesheet from "features/timesheet/NewTimesheet"
 import Landing from "features/landing-page/Landing"
+import EditTimesheet from "features/timesheet/open-timesheets/EditTimesheet"
+import OpenTimesheets from "features/timesheet/open-timesheets/OpenTimesheets"
 
 interface IMenuItem {
     path: string
@@ -44,6 +46,18 @@ const defaultMenuItems: IMenuItemGroup[] = [
                 landingPage: false, exact: true, displaysInMenu: false, 
                 name: "New Timesheet", path: "/new-timesheet",
                 component: NewTimesheet,
+                icon: TimelineIcon
+            },
+            {
+                landingPage: false, exact: true, displaysInMenu: false, 
+                name: "Open Timesheets", path: "/open-timesheets",
+                component: OpenTimesheets,
+                icon: TimelineIcon
+            },
+            {
+                landingPage: false, exact: true, displaysInMenu: false, 
+                name: "Edit Timesheet", path: "/edit-timesheet",
+                component: EditTimesheet,
                 icon: TimelineIcon
             },
             {

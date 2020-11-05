@@ -66,8 +66,12 @@ export class TimesheetClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "https://localhost:44306";
     }
 
-    getTimesheets(): Promise<Timesheet[]> {
-        let url_ = this.baseUrl + "/api/Timesheet";
+    getTimesheets(employeeId: number | undefined): Promise<TimesheetRequest[]> {
+        let url_ = this.baseUrl + "/api/Timesheet?";
+        if (employeeId === null)
+            throw new Error("The parameter 'employeeId' cannot be null.");
+        else if (employeeId !== undefined)
+            url_ += "employeeId=" + encodeURIComponent("" + employeeId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -82,7 +86,7 @@ export class TimesheetClient {
         });
     }
 
-    protected processGetTimesheets(response: Response): Promise<Timesheet[]> {
+    protected processGetTimesheets(response: Response): Promise<TimesheetRequest[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -92,7 +96,7 @@ export class TimesheetClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(Timesheet.fromJS(item));
+                    result200!.push(TimesheetRequest.fromJS(item));
             }
             return result200;
             });
@@ -101,7 +105,7 @@ export class TimesheetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Timesheet[]>(<any>null);
+        return Promise.resolve<TimesheetRequest[]>(<any>null);
     }
 
     saveTimesheet(timesheet: TimesheetRequest): Promise<FileResponse | null> {
@@ -142,7 +146,7 @@ export class TimesheetClient {
 }
 
 export class ClientResponse implements IClientResponse {
-    clientId!: number;
+    clientId?: number | undefined;
     name?: string | undefined;
 
     constructor(data?: IClientResponse) {
@@ -177,120 +181,8 @@ export class ClientResponse implements IClientResponse {
 }
 
 export interface IClientResponse {
-    clientId: number;
+    clientId?: number | undefined;
     name?: string | undefined;
-}
-
-export class Timesheet implements ITimesheet {
-    timesheetId!: number;
-    date!: Date;
-    timesheetRows?: TimesheetRow[] | undefined;
-    employeeId!: number;
-
-    constructor(data?: ITimesheet) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.timesheetId = _data["timesheetId"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            if (Array.isArray(_data["timesheetRows"])) {
-                this.timesheetRows = [] as any;
-                for (let item of _data["timesheetRows"])
-                    this.timesheetRows!.push(TimesheetRow.fromJS(item));
-            }
-            this.employeeId = _data["employeeId"];
-        }
-    }
-
-    static fromJS(data: any): Timesheet {
-        data = typeof data === 'object' ? data : {};
-        let result = new Timesheet();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["timesheetId"] = this.timesheetId;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        if (Array.isArray(this.timesheetRows)) {
-            data["timesheetRows"] = [];
-            for (let item of this.timesheetRows)
-                data["timesheetRows"].push(item.toJSON());
-        }
-        data["employeeId"] = this.employeeId;
-        return data; 
-    }
-}
-
-export interface ITimesheet {
-    timesheetId: number;
-    date: Date;
-    timesheetRows?: TimesheetRow[] | undefined;
-    employeeId: number;
-}
-
-export class TimesheetRow implements ITimesheetRow {
-    id!: number;
-    date!: Date;
-    clientId!: number;
-    duration!: number;
-    notes?: string | undefined;
-    timesheetId!: number;
-
-    constructor(data?: ITimesheetRow) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.clientId = _data["clientId"];
-            this.duration = _data["duration"];
-            this.notes = _data["notes"];
-            this.timesheetId = _data["timesheetId"];
-        }
-    }
-
-    static fromJS(data: any): TimesheetRow {
-        data = typeof data === 'object' ? data : {};
-        let result = new TimesheetRow();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["clientId"] = this.clientId;
-        data["duration"] = this.duration;
-        data["notes"] = this.notes;
-        data["timesheetId"] = this.timesheetId;
-        return data; 
-    }
-}
-
-export interface ITimesheetRow {
-    id: number;
-    date: Date;
-    clientId: number;
-    duration: number;
-    notes?: string | undefined;
-    timesheetId: number;
 }
 
 export class TimesheetRequest implements ITimesheetRequest {

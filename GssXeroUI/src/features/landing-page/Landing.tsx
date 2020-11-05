@@ -113,6 +113,16 @@ const Landing = () => {
           <CardActions className={classes.actions}>
           </CardActions>
         </Card>
+        <Card className={classes.card} onClick={() => history.push('/open-timesheets')}>
+          {/* <CardHeader className={classes.header} title="Create New Timesheet" /> */}
+          <CardContent>
+            <Typography variant="h5" component="h2">
+                Edit existing Timesheet
+            </Typography>
+          </CardContent>
+          <CardActions className={classes.actions}>
+          </CardActions>
+        </Card>
       </form>
       {/* <LoadingModal title="Creating Quiz..." visible={store.isSaving} />
       {store.quizCreatedSuccessfully && (

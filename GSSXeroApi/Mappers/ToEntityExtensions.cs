@@ -17,6 +17,7 @@ namespace GSSXeroApi.Mappers
             {
                 Date = timesheetDto.Date,
                 EmployeeId = timesheetDto.EmployeeId,
+                Status = TimesheetStatus.Open,
                 TimesheetRows = timesheetDto.TimesheetRows.Select(t => t.ToEntity(context)).ToList()
             };
         }

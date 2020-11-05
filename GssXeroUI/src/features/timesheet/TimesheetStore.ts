@@ -1,4 +1,4 @@
-import { ClientResponse, Timesheet, TimesheetRequest, TimesheetRowRequest } from "client/backendclient"
+import { ClientResponse, TimesheetRequest, TimesheetRowRequest } from "client/backendclient"
 import { clientClient, timesheetClient } from "client/backendclientinstances"
 import { GlobalStore } from "features/shared/stores/GlobalStore"
 import { observable, action, computed } from "mobx"
@@ -32,6 +32,8 @@ export class TimesheetStore {
     @observable timesheetRows2 = [] as ObservableTimesheetRow[]
     @observable timesheetRows = [] as TimesheetRowRequest[]
 
+    @observable openTimesheets = [] as TimesheetRequest[]
+
     @observable clients = [] as ClientResponse[]
     @observable email = ""
     @observable firstName = ""
@@ -46,6 +48,10 @@ export class TimesheetStore {
 
     @action getClients = async () => {
         this.clients = await clientClient.getClients();
+    }
+
+    @action getOpenTimesheets = async () => {
+        this.openTimesheets = await timesheetClient.getTimesheets(1);
     }
 
     @action saveTimesheet = async () => {
