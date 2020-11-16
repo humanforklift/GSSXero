@@ -1,4 +1,4 @@
-import { ClientResponse, TimesheetRequest, TimesheetRowRequest } from "client/backendclient"
+import { ClientResponse, EditTimesheetResponse, TimesheetRequest, TimesheetResponse, TimesheetRowRequest } from "client/backendclient"
 import { clientClient, timesheetClient } from "client/backendclientinstances"
 import { GlobalStore } from "features/shared/stores/GlobalStore"
 import { observable, action, computed } from "mobx"
@@ -29,10 +29,15 @@ export class TimesheetStore {
     @observable timesheetDate = moment(new Date()).toDate();
     @observable timesheetDaysAndClients = [] as DayAndClient[];
 
+    @observable isNewTimesheet = true
+
     @observable timesheetRows2 = [] as ObservableTimesheetRow[]
     @observable timesheetRows = [] as TimesheetRowRequest[]
 
-    @observable openTimesheets = [] as TimesheetRequest[]
+    @observable openTimesheets = [] as TimesheetResponse[]
+    @observable existingTimesheet = new EditTimesheetResponse()
+
+    @observable timesheetId = 0
 
     @observable clients = [] as ClientResponse[]
     @observable email = ""
@@ -54,6 +59,12 @@ export class TimesheetStore {
         this.openTimesheets = await timesheetClient.getTimesheets(1);
     }
 
+    @action getTimesheetById = async (timesheetId: number) => {
+        this.existingTimesheet = await timesheetClient.getTimesheet(timesheetId)
+        console.log(this.existingTimesheet)
+        this.isNewTimesheet = false
+    }
+
     @action saveTimesheet = async () => {
         this.isSaving = true
         try {
@@ -62,6 +73,7 @@ export class TimesheetStore {
                 debugger
                 const timesheet: TimesheetRequest = new TimesheetRequest(
                     {
+                        timesheetId: this.isNewTimesheet ? undefined : this.existingTimesheet.timesheetId,
                         date: this.timesheetDate, 
                         employeeId: 1, 
                         timesheetRows: this.timesheetRows2.map((x, index) => new TimesheetRowRequest ({
@@ -76,7 +88,11 @@ export class TimesheetStore {
                     }
                 )
 
-                await timesheetClient.saveTimesheet(timesheet)
+                if (this.isNewTimesheet) {
+                    await timesheetClient.saveTimesheet(timesheet)
+                } else {
+                    await timesheetClient.updateTimesheet(timesheet, timesheet.timesheetId!)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -85,21 +101,33 @@ export class TimesheetStore {
     }
 
     @action initialiseTimesheetRows = () => {
-        let days = moment(this.timesheetDate).daysInMonth();
-        while (days) {
-            this.timesheetRows.unshift(new TimesheetRowRequest(
-                { 
-                    date: moment().month(this.timesheetDate.getMonth()).date(days).format('LL'), 
-                    clientId: 0,
-                    clientName: "",
-                    timesheetId: 0,
-                    duration: 0
-                }
-            ));
-            let row = new ObservableTimesheetRow()
-            row.date = moment().month(this.timesheetDate.getMonth()).date(days).format('LL');
-            this.timesheetRows2.unshift(row)
-            days--;
+        if (!this.isNewTimesheet) {
+            debugger
+            this.timesheetRows2 = this.existingTimesheet.timesheetRows!.map(x => ({
+                clientId: x.clientId,
+                duration: x.duration,
+                clientName: x.clientName!,
+                date: x.date!, 
+                notes: x.notes!,
+            }));
+        }
+        else {
+            let days = moment(this.timesheetDate).daysInMonth();
+            while (days) {
+                this.timesheetRows.unshift(new TimesheetRowRequest(
+                    { 
+                        date: moment().month(this.timesheetDate.getMonth()).date(days).format('LL'), 
+                        clientId: 0,
+                        clientName: "",
+                        timesheetId: 0,
+                        duration: 0
+                    }
+                ));
+                let row = new ObservableTimesheetRow()
+                row.date = moment().month(this.timesheetDate.getMonth()).date(days).format('LL');
+                this.timesheetRows2.unshift(row)
+                days--;
+        }
         }
         console.log(this.timesheetRows2);
     }

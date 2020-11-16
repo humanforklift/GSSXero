@@ -1,6 +1,7 @@
 ﻿using GSSXeroApi.Mappers;
 using GSSXeroApi.Models;
 using GSSXeroApi.Models.DTOs.Requests.Timesheet;
+using GSSXeroApi.Models.DTOs.Responses.Timesheet;
 using GSSXeroApi.Models.Entities;
 using GSSXeroApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -37,12 +38,35 @@ namespace GSSXeroApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<TimesheetRequest>> GetOpenTimesheets(int employeeId)
+        public async Task<List<TimesheetResponse>> GetOpenTimesheets(int employeeId)
         {
             return await _context.Timesheets
                 .Where(t => t.Status == TimesheetStatus.Open && t.EmployeeId == employeeId)
                 .Select(t => t.ToDto())
                 .ToListAsync();
+        }
+
+        public async Task<EditTimesheetResponse> GetTimesheetById(int timesheetId)
+        {
+            var clients = await _context.Clients.ToListAsync();
+
+            return await _context.Timesheets
+                .Where(t => t.TimesheetId == timesheetId)
+                .Include(t => t.TimesheetRows)
+                .Select(t => t.ToDto(clients))
+                .SingleOrDefaultAsync();
+        }
+
+        public async Task UpdateTimesheetAsync(TimesheetRequest timesheet)
+        {
+            var entity = await _context.Timesheets
+                .Include(t => t.TimesheetRows)
+                .SingleOrDefaultAsync(t => t.TimesheetId == timesheet.TimesheetId);
+
+            entity.TimesheetRows = timesheet.TimesheetRows
+                .Select(t => t.ToEntity(_context)).ToList();
+
+            await _context.SaveChangesAsync();
         }
     }
 }

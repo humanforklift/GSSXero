@@ -25,7 +25,7 @@ import { TimesheetStore } from "../TimesheetStore";
 import useInitialMount from "shared-components/hooks/useInitialMount";
 import { TableComponent } from "shared-components/material-ui-table-component";
 import { OpenTimesheetGridDefinition } from "./OpenTimesheetGridDefinition";
-import { TimesheetRequest } from "client/backendclient";
+import { TimesheetRequest, TimesheetResponse } from "client/backendclient";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,36 +108,16 @@ const OpenTimesheets = () => {
     fetchData()
   })
 
-  const [selectedClient, setSelectedClient] = React.useState("");
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     moment(new Date()).toDate()
   );
 
-  const handleClick = (e: any) => {
-    console.log("Card clicked");
-  };
-
-  const handleKeyPress = (e: any) => {
-    if (e.keyCode === 13 || e.which === 13) {
-      alert("Enter pressed");
-    }
-  };
-
-  const handleClientChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedClient(event.target.value);
-  };
-
-  const handleDateChange = useCallback(async (date: Date | null) => {
-    store.timesheetDate = moment(date!).startOf('month').toDate();
-    setSelectedDate(date);
-    store.getDaysAndClientsArray();
-  }, []);
-
-  const onRowClick = useCallback(async (event?: React.MouseEvent, rowData?: TimesheetRequest) => {
+  const onRowClick = useCallback(async (event?: React.MouseEvent, rowData?: TimesheetResponse) => {
     if (!rowData) {
       throw new Error('Internal Error: rowData is undefined');
     }
-    //history.push(`/service/${rowData.serviceId!}`);
+    globalStore.existingTimesheetId = rowData.timesheetId
+    history.push(`/edit-timesheet/${rowData.timesheetId}`);
   }, [history])
 
   return (

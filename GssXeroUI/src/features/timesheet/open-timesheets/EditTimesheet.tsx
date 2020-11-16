@@ -98,11 +98,9 @@ const EditTimesheet = () => {
 
   useInitialMount(() => {
     async function fetchData() {
-      store.initialiseTimesheetRows()
-      console.log(store.timesheetRows)
+      await store.getTimesheetById(globalStore.existingTimesheetId)
       await store.getClients()
-      // console.log(store.clients)
-      // store.getDaysAndClientsArray()
+      store.initialiseTimesheetRows()
     }
     fetchData()
   })
@@ -140,7 +138,7 @@ const EditTimesheet = () => {
           <CardContent>
             <div className={classes.noScroll}>
             <Typography variant="h5" component="h2">
-              Create new monthly timesheet
+              Timesheet for {moment(store.timesheetDate).format('MMM YYYY')}
             </Typography>
             {/* <InputProps
                 stateObject={store}
@@ -170,12 +168,6 @@ const EditTimesheet = () => {
               Save Timesheet
             </Button>
             </div>
-            {/* </InputProps>
-              <InputProps
-                stateObject={store}
-                errorHandler={store.errorHandler}
-                propertyName="quizName"
-              > */}
             <div>
             {store.timesheetRows2.map((row, index) => (
               <TimesheetRows day={row.date!} index={index} clients={store.clients} rows={store.timesheetRows2} key={index}/>

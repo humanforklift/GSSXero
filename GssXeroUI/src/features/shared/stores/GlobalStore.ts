@@ -56,7 +56,7 @@ const defaultMenuItems: IMenuItemGroup[] = [
             },
             {
                 landingPage: false, exact: true, displaysInMenu: false, 
-                name: "Edit Timesheet", path: "/edit-timesheet",
+                name: "Edit Timesheet", path: "/edit-timesheet/:id",
                 component: EditTimesheet,
                 icon: TimelineIcon
             },
@@ -101,6 +101,7 @@ export class GlobalStore {
         }
     }
 
+    @observable existingTimesheetId = 0
     @observable menuItems: IMenuItemGroup[] = []
     
     // @observable currentUser? = userCacheHandler.get()

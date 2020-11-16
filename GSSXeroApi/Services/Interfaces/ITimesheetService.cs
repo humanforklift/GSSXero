@@ -1,4 +1,5 @@
 ﻿using GSSXeroApi.Models.DTOs.Requests.Timesheet;
+using GSSXeroApi.Models.DTOs.Responses.Timesheet;
 using GSSXeroApi.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace GSSXeroApi.Services.Interfaces
     {
         List<Timesheet> GetTimesheets();
         Task SaveTimesheetAsync(TimesheetRequest timesheet);
-        Task<List<TimesheetRequest>> GetOpenTimesheets(int employeeId);
+        Task<List<TimesheetResponse>> GetOpenTimesheets(int employeeId);
+        Task<EditTimesheetResponse> GetTimesheetById(int timesheetId);
+        Task UpdateTimesheetAsync(TimesheetRequest timesheet);
     }
 }
